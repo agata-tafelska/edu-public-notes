@@ -1,0 +1,106 @@
+openapi: 3.0.1
+info:
+  title: Notes API
+  description: "API for managing notes"
+  version: 1.0.0
+paths:
+  /notes:
+    get:
+      tags:
+        - notes
+      summary: Get notes
+      operationId: getNotes
+      responses:
+        200:
+          description: Success response containing list of notes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotesResponse'
+        500:
+          description: Server error
+    put:
+      tags:
+        - notes
+      summary: Upsert note
+      description: Creates or updates note
+      operationId: upsertNote
+      requestBody:
+        description: Updated note
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertNoteRequest'
+        required: true
+      responses:
+        201:
+          description: Success - note created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        204:
+          description: Success - note updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        500:
+          description: Server error
+  /notes/{noteId}:
+    delete:
+      tags:
+        - notes
+      summary: Delete note
+      operationId: deleteNote
+      parameters:
+        - name: noteId
+          in: path
+          description: Id of the note
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Note deleted successfully (No content)
+        404:
+          description: Not found
+        500:
+          description: Server error
+components:
+  schemas:
+    Note:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - text
+        - created_at
+    NotesResponse:
+      type: object
+      properties:
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+      required:
+        - notes
+    UpsertNoteRequest:
+      type: object
+      properties:
+        noteId:
+          type: string
+        text:
+          type: string
+      required:
+        - text

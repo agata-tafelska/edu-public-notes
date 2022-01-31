@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  database:
+    container_name: service-notes-database
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
